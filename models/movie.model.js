@@ -11,7 +11,8 @@ const movieSchema = new Schema({
     type: [Object],
    // minlength: 3,
     validate: [v => Array.isArray(v) && v.length >= 3, "You must inlude atleast 3 actors"]
-  }
+  },
+    imageUrl: {type: String, required: true}
 
 }, {
   timestamps: true,

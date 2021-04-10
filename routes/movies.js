@@ -44,12 +44,14 @@ router.route('/').post(authJwtController.isAuthenticated, (req, res) => {
     const yearReleased = req.body.yearReleased;
     const genre = req.body.genre;
     const actors =  req.body.actors;
+    const imageUrl= req.body.imageUrl;
 
     const newMovie = new Movie({
         title,
         yearReleased,
         genre,
-        actors
+        actors,
+        imageUrl
     });
     newMovie.save()
         .then(() => res.json('Movie added!'))
@@ -85,7 +87,8 @@ router.route('/').put(authJwtController.isAuthenticated, (req, res) => {
                 title: req.body.title,
                 yearReleased: req.body.yearReleased,
                 genre: req.body.genre,
-                actors: req.body.actors
+                actors: req.body.actors,
+                imageUrl: req.body.imageUrl
             });
             newMovie.save()
                 .then(() => res.json('Movie updated!'))
