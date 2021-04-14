@@ -59,20 +59,39 @@ router.route('/').post(authJwtController.isAuthenticated, (req, res) => {
 });
 
 router.route('/:_id').get(authJwtController.isAuthenticated, (req, res) => {
-    Movie.find({_id: req.params._id})
-        .then(movie => {
-            if (movie.length === 0)
+    if (req.query.review) {
+        console.log("this is inside the if");
+        Movie.aggregate([
             {
-                res.status(400).json("Movie doesn't exist")
+                $lookup: {
+                    from: "reviews",
+                    localField: "title",
+                    foreignField: "movie",
+                    as: "review"
+                }
             }
-            else {
-                res.json(movie);
+        ]).exec((err, result) => {
+            if (err) {
+                res.status(400).json('Error: ' + err);
+
+            } else {
+                // res.send({Movielist: result});
+                Movie.find({_id: req.params._id})
+                    .then(movie => {
+                        if (movie.length === 0) {
+                            res.status(400).json("Movie doesn't exist")
+                        } else {
+                            res.json(movie);
+                        }
+                    })
+                    .catch(err => res.status(400).json('Error: ' + err));
             }
-        })
-        .catch(err => res.status(400).json('Error: ' + err));
-    // console.log("this is inside the title")
-    // console.log(req.params.title);
-});
+        });
+
+
+        // console.log("this is inside the title")
+        // console.log(req.params.title);
+    }});
 
 router.route('/').delete(authJwtController.isAuthenticated, (req, res) => {
     Movie.deleteOne({title: req.body.title})
