@@ -58,8 +58,8 @@ router.route('/').post(authJwtController.isAuthenticated, (req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/:title').get(authJwtController.isAuthenticated, (req, res) => {
-    Movie.find({title: req.params.title})
+router.route('/:_id').get(authJwtController.isAuthenticated, (req, res) => {
+    Movie.find({_id: req.params._id})
         .then(movie => {
             if (movie.length === 0)
             {
