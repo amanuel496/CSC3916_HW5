@@ -33,7 +33,7 @@ router.route('/').post(authJwtController.isAuthenticated, (req, res) => {
     const decoded = jwt.verify(token[1], process.env.SECRET_KEY);
     console.log(decoded);
 
-    Movie.find({title: req.body.movie})
+    Movie.find({_id: req.body.movie})
         .then(movie => {
             if (movie.length === 0)
             {
@@ -41,7 +41,7 @@ router.route('/').post(authJwtController.isAuthenticated, (req, res) => {
             }
             else {
                 const movie = req.body.movie;
-                const nameOfReviewer = decoded.email;
+                const nameOfReviewer = decoded.name;
                 const quote = req.body.quote;
                 const rating =  req.body.rating;
                 const newReview = new Review({

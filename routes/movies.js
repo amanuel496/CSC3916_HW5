@@ -12,11 +12,38 @@ router.route('/').get((req, res) => {
             {
                 $lookup: {
                     from: "reviews",
-                    localField: "title",
+                    localField: "_id",
                     foreignField: "movie",
                     as: "review"
                 }
-            }
+            },
+            {
+                $unwind: "$review"
+            },
+            // {
+            //     $sort:{ ratingAvg: -1 }
+            // },
+
+            {
+                $group: {
+                    _id: "$_id",
+                    actors: {"$first": "$actors"},
+                    title: {"$first": "$title"},
+                    yearReleased: {"$first": "$yearReleased"},
+                    genre: {"$first": "$genre"},
+                    imageUrl: {"$first": "$imageUrl"},
+                    review: {$addToSet: "$review"},
+                    ratingAvg: {
+                        $avg: "$review.rating"
+                    }
+                },
+            },
+            {
+                $sort:{ ratingAvg: -1 }
+            },
+            // {"$replaceRoot":{"newRoot":"$"}}
+            // console.log("");
+
         ]).exec((err, result) => {
             if (err) {
                 res.status(400).json('Error: ' + err);
@@ -61,11 +88,12 @@ router.route('/').post(authJwtController.isAuthenticated, (req, res) => {
 router.route('/:_id').get(authJwtController.isAuthenticated, (req, res) => {
     if (req.query.review) {
         console.log("this is inside the if");
+        id = req.params._id;
         Movie.aggregate([
             {
                 $lookup: {
                     from: "reviews",
-                    localField: "title",
+                    localField: "_id",
                     foreignField: "movie",
                     as: "review"
                 }
@@ -75,16 +103,23 @@ router.route('/:_id').get(authJwtController.isAuthenticated, (req, res) => {
                 res.status(400).json('Error: ' + err);
 
             } else {
-                // res.send({Movielist: result});
-                Movie.find({_id: req.params._id})
-                    .then(movie => {
-                        if (movie.length === 0) {
-                            res.status(400).json("Movie doesn't exist")
-                        } else {
-                            res.json(movie);
-                        }
-                    })
-                    .catch(err => res.status(400).json('Error: ' + err));
+                console.log(result)
+                console.log(result.values(id))
+                console.log(id)
+                // res.send(result.values(id));
+
+                let obj = result.find(movie => movie._id == id);
+                console.log(obj)
+                res.send(obj);
+                // Movie.find({_id: req.params._id})
+                //     .then(movie => {
+                //         if (movie.length === 0) {
+                //             res.status(400).json("Movie doesn't exist")
+                //         } else {
+                //             res.json(movie);
+                //         }
+                //     })
+                //     .catch(err => res.status(400).json('Error: ' + err));
             }
         });
 

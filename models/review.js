@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
+const {ObjectId} = require("bson");
 
 const Schema = mongoose.Schema;
 
 const reviewSchema = new Schema({
-  movie: { type: String, required: true },
+  movie:  { type: ObjectId, required: true },
   nameOfReviewer: { type: String, required: true },
   quote: { type: String, required: true },
   rating: { type: Number, required: true },
