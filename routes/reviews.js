@@ -4,7 +4,7 @@ let Movie = require('../models/movie.model');
 var authJwtController = require('./auth_jwt.js');
 var jwt = require('jsonwebtoken');
 
-router.route('/').get((req, res) => {
+router.route('/').get(authJwtController.isAuthenticated, (req, res) => {
     Review.find()
         .then(reviews => res.json(reviews))
         .catch(err => res.status(400).json('Error: ' + err));
