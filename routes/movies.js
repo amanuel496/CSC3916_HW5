@@ -3,7 +3,7 @@ let Movie = require('../models/movie.model');
 let Review = require('../models/review');
 var authJwtController = require('./auth_jwt.js');
 
-router.route('/').get( (req, res) => {
+router.route('/').get(authJwtController.isAuthenticated,  (req, res) => {
     console.log(req.query.review)
 
     if (req.query.review) {
