@@ -86,7 +86,7 @@ app.use(express.static(path.join(__dirname, 'build')));
 app.get('/*', (req, res) => {
     res.setHeader('Last-Modified', (new Date()).toUTCString());
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
-    next(); 
+//     next(); 
 });
 app.listen(process.env.PORT || 8080);
 module.exports = app; // for testing only
