@@ -28,6 +28,8 @@ app.use(passport.initialize());
 
 var router = express.Router();
 
+app.disable('etag');
+
 // function getJSONObjectForMovieRequirement(req) {
 //     var json = {
 //         headers: "No headers",
