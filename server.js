@@ -28,7 +28,7 @@ app.use(passport.initialize());
 
 var router = express.Router();
 
-app.disable('etag');
+app.set('etag', false);
 
 // function getJSONObjectForMovieRequirement(req) {
 //     var json = {
